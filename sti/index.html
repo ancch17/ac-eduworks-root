@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMU IGD in Generative AI — Teaching Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1B2430;
+  --muted:#5C6B7A;
+  --faint:#8A97A3;
+  --paper:#EDF1EE;
+  --card:#FFFFFF;
+  --line:#D6DDD8;
+  --line-soft:#E6EBE7;
+  --a:#1F6B5E;          /* Certificate A — Ethics & Data Protection */
+  --a-soft:#E4EFEB;
+  --b:#A63D5F;          /* Certificate B — Apps Design & Prompt Engineering */
+  --b-soft:#F6E6EB;
+  --mile:#B8791F;       /* diploma milestones */
+  --mile-soft:#F7EEDC;
+  --clash:#C2382C;
+  --r:3px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.55;
+  font-variant-numeric:tabular-nums;
+}
+h1,h2,h3{font-family:"Bricolage Grotesque","IBM Plex Sans",sans-serif;font-weight:700;letter-spacing:-.02em;margin:0}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- masthead ---------- */
+.mast{padding:44px 0 26px;border-bottom:1px solid var(--line)}
+.mast h1{font-size:clamp(28px,4.4vw,46px);line-height:1.04;max-width:19ch}
+.mast .sub{margin-top:14px;color:var(--muted);max-width:62ch}
+.mast .sub a{color:var(--ink);text-decoration-color:var(--line)}
+.tally{display:flex;flex-wrap:wrap;gap:0;margin-top:26px;border:1px solid var(--line);background:var(--card)}
+.tally div{flex:1 1 150px;padding:13px 16px;border-right:1px solid var(--line-soft)}
+.tally div:last-child{border-right:0}
+.tally b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:25px;line-height:1.1}
+.tally span{font-size:12.5px;color:var(--muted)}
+
+/* ---------- year strip (hero) ---------- */
+.strip{margin:30px 0 4px;background:var(--card);border:1px solid var(--line);padding:16px 18px 12px}
+.strip-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+.sm{min-width:0}
+.sm h4{margin:0 0 5px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.01em}
+.sm .tdow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px}
+.sm .tdow span{font-size:8.5px;color:var(--faint);text-align:center;line-height:1}
+.ticks{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.tick{aspect-ratio:1/1;border-radius:2px;background:var(--line-soft)}
+.tick.pad{background:transparent}
+.tick.live{cursor:pointer}
+.tick.live:hover,.tick.live:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.strip-note{margin-top:11px;font-size:12.5px;color:var(--faint);max-width:80ch}
+
+/* ---------- sections ---------- */
+section{padding:40px 0;border-top:1px solid var(--line)}
+.shead{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.shead h2{font-size:23px}
+.shead p{margin:4px 0 0;color:var(--muted);font-size:14px;max-width:60ch}
+
+/* ---------- pathway ---------- */
+.path{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cert{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--a);padding:18px 20px}
+.cert.b{border-top-color:var(--b)}
+.cert h3{font-size:17px;line-height:1.25}
+.cert .meta{margin:8px 0 14px;font-size:13px;color:var(--muted)}
+.cert ol{margin:0;padding-left:0;list-style:none}
+.cert li{border-top:1px solid var(--line-soft)}
+.cert li:first-of-type{border-top:0}
+.mrow{
+  display:flex;gap:11px;align-items:baseline;width:100%;text-align:left;
+  background:none;border:0;font:inherit;font-size:14px;padding:9px 8px;
+  cursor:pointer;border-radius:var(--r);color:var(--ink);
+}
+.mrow .num{flex:0 0 20px;font-weight:600;color:var(--a);font-variant-numeric:tabular-nums}
+.cert.b .mrow .num{color:var(--b)}
+.mrow .t{flex:1 1 auto}
+.mrow .pick{flex:0 0 auto;font-size:11.5px;color:var(--faint);white-space:nowrap}
+.mrow:hover{background:var(--a-soft)}
+.cert.b .mrow:hover{background:var(--b-soft)}
+.mrow[aria-pressed="true"]{background:var(--a-soft);box-shadow:inset 3px 0 0 var(--a)}
+.cert.b .mrow[aria-pressed="true"]{background:var(--b-soft);box-shadow:inset 3px 0 0 var(--b)}
+.mrow[aria-pressed="true"] .pick{color:var(--a);font-weight:600}
+.cert.b .mrow[aria-pressed="true"] .pick{color:var(--b)}
+.certtog{
+  font:inherit;font-size:12px;background:transparent;color:var(--muted);
+  border:1px solid var(--line);border-radius:var(--r);padding:3px 9px;cursor:pointer;margin-bottom:12px;
+}
+.certtog[aria-pressed="true"]{background:var(--a);border-color:var(--a);color:#fff}
+.cert.b .certtog[aria-pressed="true"]{background:var(--b);border-color:var(--b)}
+.pathfoot{
+  margin-top:14px;background:var(--card);border:1px solid var(--line);
+  padding:13px 17px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;
+  justify-content:space-between;font-size:13.5px;
+}
+.pathfoot b{font-family:"Bricolage Grotesque",sans-serif}
+.jump{
+  font:inherit;font-size:13px;background:var(--ink);color:#fff;border:0;
+  border-radius:var(--r);padding:7px 14px;cursor:pointer;
+}
+.jump[disabled]{background:var(--line);color:var(--faint);cursor:default}
+.capstone{margin-top:16px;background:var(--mile-soft);border:1px solid #E7D5B4;padding:16px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.capstone div{font-size:13.5px}
+.capstone b{display:block;font-size:14px;margin-bottom:2px}
+.dates-bar{margin-top:16px;background:var(--card);border:1px solid var(--line);padding:14px 18px;display:flex;flex-wrap:wrap;gap:26px;font-size:13.5px}
+.dates-bar b{font-family:"Bricolage Grotesque",sans-serif}
+
+/* ---------- controls ---------- */
+.controls{background:var(--card);border:1px solid var(--line);padding:16px 18px;position:sticky;top:0;z-index:20}
+.crow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:11px}
+.crow:last-child{margin-bottom:0}
+.clabel{font-size:12.5px;color:var(--muted);flex:0 0 96px}
+.chip{
+  font:inherit;font-size:13px;background:transparent;color:var(--ink);
+  border:1px solid var(--line);border-radius:var(--r);padding:5px 11px;cursor:pointer;
+}
+.chip:hover{border-color:var(--faint)}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.ca[aria-pressed="true"]{background:var(--a);border-color:var(--a)}
+.chip.cb[aria-pressed="true"]{background:var(--b);border-color:var(--b)}
+.chip:focus-visible,.mchip:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.mine{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{
+  font:inherit;font-size:12.5px;background:var(--card);color:var(--muted);
+  border:1px solid var(--line);border-radius:var(--r);padding:4px 9px;cursor:pointer;
+}
+.mchip[aria-pressed="true"]{color:#fff}
+.mchip.ma[aria-pressed="true"]{background:var(--a);border-color:var(--a)}
+.mchip.mb[aria-pressed="true"]{background:var(--b);border-color:var(--b)}
+.readout{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-soft);font-size:13.5px;color:var(--muted)}
+.readout b{color:var(--ink)}
+.readout .warn{color:var(--clash);font-weight:600}
+.linkbtn{background:none;border:0;font:inherit;font-size:13px;color:var(--muted);text-decoration:underline;text-decoration-color:var(--line);cursor:pointer;padding:0}
+
+.pinch{
+  margin:0 0 16px;background:var(--mile-soft);border:1px solid #E7D5B4;
+  padding:12px 16px;font-size:13.5px;color:#5B4310;
+}
+.pinch b{color:#3E2E08}
+
+/* ---------- calendar ---------- */
+.months{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px;margin-top:20px}
+.month{background:var(--card);border:1px solid var(--line);padding:14px 15px 16px}
+.month h3{font-size:15px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:baseline}
+.month h3 em{font-style:normal;font-size:12px;color:var(--faint);font-family:"IBM Plex Sans",sans-serif;font-weight:400}
+.dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:3px}
+.dow span{font-size:10.5px;color:var(--faint);text-align:center;padding:2px 0}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.day{
+  aspect-ratio:1/1;border:1px solid transparent;border-radius:var(--r);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  padding-top:3px;font-size:11.5px;color:var(--muted);position:relative;
+  background:transparent;font-family:inherit;cursor:default;
+}
+.day.pad{visibility:hidden}
+.day.we{color:var(--faint);background:#F7F9F7}
+.day.has{cursor:pointer;border-color:var(--line-soft);background:#FAFCFA}
+.day.has:hover{border-color:var(--faint)}
+.day.sel{outline:2px dashed var(--ink);outline-offset:2px}
+.dots{display:flex;gap:2px;margin-top:2px;flex-wrap:wrap;justify-content:center}
+.dot{width:5px;height:5px;border-radius:5px}
+.dot.a{background:var(--a)} .dot.b{background:var(--b)} .dot.m{background:var(--mile)}
+.dot.ev{border:1.5px solid var(--a);background:transparent;width:6px;height:6px}
+.dot.ev.bb{border-color:var(--b)}
+.day.mine-day{
+  background:#FFFFFF;border-color:var(--ink);
+  box-shadow:inset 0 0 0 2px var(--ink);
+  color:var(--ink);font-weight:700;
+}
+.day.clash-day{
+  background:#FBD9D4;border-color:var(--clash);
+  box-shadow:inset 0 0 0 2px var(--clash);
+  color:#8E1F16;font-weight:700;
+}
+/* focus mode: once modules are picked, everything else recedes */
+.months.focus .day.has:not(.mine-day):not(.clash-day){opacity:.24}
+.months.focus .day:not(.has):not(.pad){opacity:.32}
+.month h3 em.mine{color:var(--ink);font-weight:600}
+.month.hasmine{box-shadow:inset 3px 0 0 var(--ink)}
+.strip-grid.focus .tick.live:not(.mine){opacity:.22}
+
+/* ---------- detail panel ---------- */
+.detail{margin-top:18px;background:var(--card);border:1px solid var(--line);padding:16px 18px;min-height:78px}
+.detail h4{margin:0 0 10px;font-size:14px;font-family:"Bricolage Grotesque",sans-serif}
+.detail .empty{color:var(--faint);font-size:13.5px;margin:0}
+.ev{display:flex;gap:12px;padding:9px 0;border-top:1px solid var(--line-soft);font-size:13.5px}
+.ev:first-of-type{border-top:0}
+.ev .bar{flex:0 0 3px;border-radius:3px;background:var(--a)}
+.ev.evb .bar{background:var(--b)}
+.ev.evm .bar{background:var(--mile)}
+.ev .t{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+/* ---------- agenda ---------- */
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font-size:13.5px}
+th{
+  text-align:left;font-weight:600;font-size:12px;color:var(--muted);
+  padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;
+}
+td{padding:10px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+tr:last-child td{border-bottom:0}
+tbody tr.rowa{box-shadow:inset 3px 0 0 var(--a)}
+tbody tr.rowb{box-shadow:inset 3px 0 0 var(--b)}
+tbody tr.rowm{box-shadow:inset 3px 0 0 var(--mile)}
+tbody tr.hide{display:none}
+td .code{font-size:12px;color:var(--faint)}
+.tag{display:inline-block;font-size:11.5px;padding:1px 6px;border-radius:var(--r);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.tag.eve{border-color:#C9B8D6;background:#F4EFF7;color:#5B4270}
+.tag.part{border-color:#E7D5B4;background:var(--mile-soft);color:#7A5310}
+.wrapscroll{overflow-x:auto}
+
+/* ---------- hoverable module codes ---------- */
+.mref{
+  font-weight:600;border-bottom:1px dotted currentColor;
+  cursor:help;white-space:nowrap;
+}
+.mref.ra{color:var(--a)}
+.mref.rb{color:var(--b)}
+.tip{
+  position:fixed;left:0;top:0;z-index:60;max-width:330px;
+  background:var(--ink);color:#fff;padding:10px 13px;border-radius:var(--r);
+  font-size:13px;line-height:1.45;pointer-events:none;
+  opacity:0;visibility:hidden;transition:opacity .12s ease;
+  box-shadow:0 8px 24px rgba(27,36,48,.24);
+}
+.tip.on{opacity:1;visibility:visible}
+.tip b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:13.5px;margin-bottom:3px}
+.tip span{color:#AEBCC7;font-size:12px}
+.tip .trow{display:flex;gap:8px;padding:7px 0;border-top:1px solid rgba(255,255,255,.15)}
+.tip .trow:first-of-type{border-top:0;padding-top:3px}
+.tip .trow:last-child{padding-bottom:0}
+.tip .tdot{flex:0 0 7px;height:7px;border-radius:7px;margin-top:5px}
+.tip .tdot.a{background:#5FBFA8}
+.tip .tdot.b{background:#E98CA6}
+.tip .tdot.m{background:#E0A94A}
+.tip .tdot.hollow{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor}
+.tip .tdot.a.hollow{color:#5FBFA8}
+.tip .tdot.b.hollow{color:#E98CA6}
+.tip .tt{font-size:12.5px;line-height:1.35}
+.tip .tm{color:#AEBCC7;font-size:11.5px;margin-top:1px}
+
+/* ---------- unavailability ---------- */
+.day.off{
+  background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+    rgba(27,36,48,.16) 3px,rgba(27,36,48,.16) 5px);
+  color:var(--faint);cursor:help;
+}
+.day.conflict{
+  border-color:var(--clash);box-shadow:inset 0 0 0 2px var(--clash);
+  color:#8E1F16;font-weight:700;
+}
+.tick.off{
+  background-image:repeating-linear-gradient(45deg,transparent,transparent 2px,
+    rgba(27,36,48,.28) 2px,rgba(27,36,48,.28) 4px);
+  cursor:help;
+}
+.tip .tdot.off{background:#8A97A3}
+.conflicts{
+  margin:0 0 16px;background:#FDF0EE;border:1px solid #EBBBB5;padding:14px 17px;font-size:13.5px;
+}
+.conflicts h4{margin:0 0 9px;font-family:"Bricolage Grotesque",sans-serif;font-size:14px;color:#8E1F16}
+.conflicts .cf{padding:8px 0;border-top:1px solid #F0CFC9}
+.conflicts .cf:first-of-type{border-top:0;padding-top:0}
+.conflicts .why{color:#8E1F16}
+.conflicts .alt{color:var(--muted);font-size:12.5px;margin-top:2px}
+.conflicts .ok{color:var(--a);font-weight:600}
+.conflicts .none{color:var(--muted)}
+
+/* ---------- legend / footer ---------- */
+.legend{display:flex;flex-wrap:wrap;gap:18px;font-size:12.5px;color:var(--muted);margin-top:16px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+footer{padding:34px 0 60px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+footer p{max-width:74ch}
+footer a{color:var(--ink)}
+
+@media (max-width:880px){
+  .path{grid-template-columns:1fr}
+  .capstone{grid-template-columns:1fr}
+  .strip-grid{grid-template-columns:repeat(4,1fr);gap:14px}
+  .controls{position:static}
+  .clabel{flex:0 0 100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="mast">
+    <h1>Twelve modules, two certificates, one diploma</h1>
+    <p class="sub">Every published teaching date for the SMU Academy <a href="https://academy.smu.edu.sg/courses/industry-graduate-diploma-generative-ai-large-language-models-and-ai-governance" target="_blank" rel="noopener">Industry Graduate Diploma in Generative AI, Large Language Models and AI Governance</a>, laid out on one calendar. Pick the modules you might teach and the planner totals your days and flags any that collide.</p>
+    <div class="tally">
+      <div><b id="t-days">—</b><span>calendar days carrying a class</span></div>
+      <div><b id="t-slots">—</b><span>module-days once overlaps are counted</span></div>
+      <div><b id="t-runs">—</b><span>separate intakes to staff</span></div>
+      <div><b>12</b><span>modules, 2 certificates, Sep–Mar</span></div>
+    </div>
+  </header>
+
+  <div class="strip">
+    <div class="strip-grid" id="strip"></div>
+    <p class="strip-note">One square per calendar day, laid out Monday to Sunday like the months below. Solid squares are full teaching days, outlined squares are evening sessions, amber is a diploma deadline, and a red underline marks a day carrying two modules at once. Hover any square to see what runs.</p>
+  </div>
+
+  <!-- PATHWAY -->
+  <section>
+    <div class="shead">
+      <div>
+        <h2>How the qualification stacks up</h2>
+        <p>The diploma is not taught as a single course. It is assembled from two Advanced Certificates of six modules each, plus a capstone requirement and an exam. Click any module below to add it to your teaching list.</p>
+      </div>
+    </div>
+
+    <div class="path">
+      <div class="cert" id="certA">
+        <h3>Advanced Certificate in Generative AI, Ethics and Data Protection</h3>
+        <p class="meta">Intermediate · 12 full days · SGD 13,080 · course code AC-GAI · partner: Straits Interactive</p>
+        <button class="certtog" data-cert="A" aria-pressed="true">Showing on calendar</button>
+        <ol id="listA"></ol>
+      </div>
+      <div class="cert b" id="certB">
+        <h3>Advanced Certificate in Generative AI Apps Design and Prompt Engineering</h3>
+        <p class="meta">Basic · 12 full days · SGD 13,080 · course code AC-GAIAD · partner: Straits Interactive</p>
+        <button class="certtog" data-cert="B" aria-pressed="true">Showing on calendar</button>
+        <ol id="listB"></ol>
+      </div>
+    </div>
+
+    <div class="pathfoot">
+      <span id="pathcount"></span>
+      <button class="jump" id="jump">See them on the calendar</button>
+    </div>
+
+    <div class="capstone">
+      <div><b>Plus a capstone</b>From January 2026, every diploma learner must finish an Integrated Learning Project or a set of Enrichment Workshops and Networking Sessions. Unfunded, SGD 817.50.</div>
+      <div><b>Plus an exam</b>Each module carries its own assessment, and the diploma adds one overall exam on top. SGD 545, unfunded.</div>
+      <div><b>Inside two years</b>Modules, capstone and exam must all be cleared within two years. Either certificate on its own allows three years and needs 75% attendance per module.</div>
+    </div>
+
+    <div class="dates-bar">
+      <span><b>13 Nov 2026</b> — diploma applications close</span>
+      <span><b>31 Dec 2026</b> — next diploma intake</span>
+      <span><b>Jan 2027</b> — term begins</span>
+      <span><b>SGD 26,160</b> — full diploma fee, from SGD 3,048 after maximum funding</span>
+    </div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section>
+    <div class="shead">
+      <div>
+        <h2>The teaching calendar</h2>
+        <p>Hover any marked day to see what runs that day. Click to pin it in the panel below. Turn modules on to build your own teaching load.</p>
+      </div>
+    </div>
+
+    <p class="pinch" id="pinch"></p>
+
+    <div class="controls">
+      <div class="crow">
+        <span class="clabel">Show</span>
+        <button class="chip ca" data-f="A" aria-pressed="true">Ethics &amp; Data Protection</button>
+        <button class="chip cb" data-f="B" aria-pressed="true">Apps Design &amp; Prompt Engineering</button>
+        <button class="chip" data-f="M" aria-pressed="true">Diploma milestones</button>
+      </div>
+      <div class="crow">
+        <span class="clabel">Delivery</span>
+        <button class="chip" data-m="day" aria-pressed="true">Full days</button>
+        <button class="chip" data-m="eve" aria-pressed="true">Evenings, 6.30–10.45pm</button>
+        <button class="chip" data-blk aria-pressed="true">My unavailability</button>
+      </div>
+      <div class="crow">
+        <span class="clabel">I'd teach</span>
+        <div class="mine" id="mine"></div>
+      </div>
+      <div class="readout" id="readout"></div>
+    </div>
+
+    <div class="conflicts" id="conflicts"></div>
+
+    <div class="months" id="months"></div>
+
+    <div class="detail" id="detail">
+      <h4 id="detail-h">No day selected</h4>
+      <p class="empty">Hover a marked day for a quick look, or click one to pin the details here.</p>
+    </div>
+
+    <div class="legend">
+      <span><i style="background:#1F6B5E"></i>Ethics &amp; Data Protection</span>
+      <span><i style="background:#A63D5F"></i>Apps Design &amp; Prompt Engineering</span>
+      <span><i style="border:1.5px solid #5C6B7A;background:transparent"></i>Evening session</span>
+      <span><i style="background:#B8791F"></i>Diploma milestone</span>
+      <span><i style="background:#fff;box-shadow:inset 0 0 0 2px #1B2430"></i>A day you'd teach</span>
+      <span><i style="background:#FBD9D4;box-shadow:inset 0 0 0 2px #C2382C"></i>Two of your modules clash</span>
+      <span><i style="background:repeating-linear-gradient(45deg,transparent,transparent 2px,rgba(27,36,48,.42) 2px,rgba(27,36,48,.42) 4px);border:1px solid #C7CFC9"></i>You're unavailable</span>
+      <span><i style="background:#fff;box-shadow:inset 0 0 0 2px #C2382C"></i>Class on a day you're away</span>
+    </div>
+  </section>
+
+  <!-- AGENDA -->
+  <section>
+    <div class="shead">
+      <div>
+        <h2>Every intake in order</h2>
+        <p>The same dates as a running list. Filters above apply here too.</p>
+      </div>
+      <button class="linkbtn" id="copyBtn">Copy list as text</button>
+    </div>
+    <div class="wrapscroll">
+      <table id="agenda">
+        <thead><tr><th>Dates</th><th>Module</th><th>Certificate</th><th>Delivery</th><th>Days</th></tr></thead>
+        <tbody id="agendaBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- MODULE REFERENCE -->
+  <section>
+    <div class="shead">
+      <div>
+        <h2>Module reference</h2>
+        <p>Each module is a standalone short course at SGD 2,180, from SGD 254 after maximum funding. Two full days, or four evenings where offered.</p>
+      </div>
+    </div>
+    <div class="wrapscroll">
+      <table>
+        <thead><tr><th>#</th><th>Module</th><th>Code</th><th>Delivery</th><th>Published intakes</th><th>Trainers listed</th></tr></thead>
+        <tbody id="refBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>Where the dates came from.</strong> Every date here was read off the SMU Academy module pages. Three modules — <em>A Practical Approach to Generative AI</em>, <em>Prompt Engineering</em>, and <em>Responsible Use and Ethical Management</em> — load their schedule tables through a script that does not render to a plain fetch, so only the next intake date is confirmed for those. They are marked <span class="tag part">start date only</span> and their second day is not shown. Check those three on the SMU site before you commit to anything.</p>
+    <p style="margin-top:12px">Fees, funding tiers and dates change without notice. Treat this as a planning aid, not the register.</p>
+  </footer>
+</div>
+
+<div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
+
+<script>
+const CERTS = {
+  A:{name:'Ethics & Data Protection', full:'Advanced Certificate in Generative AI, Ethics and Data Protection',
+     url:'https://academy.smu.edu.sg/courses/advanced-certificate-generative-ai-ethics-and-data-protection'},
+  B:{name:'Apps Design & Prompt Engineering', full:'Advanced Certificate in Generative Artificial Intelligence Apps Design and Prompt Engineering',
+     url:'https://academy.smu.edu.sg/courses/advanced-certificate-gen-ai-app-design'}
+};
+
+const TRAINERS_A = 'Celine Chew, Kevin Shepherdson, Sam Williams';
+const TRAINERS_B = 'Alvin Toh, Celine Chew, Kevin Shepherdson, Harish Pillay';
+
+const MODULES = [
+ {id:'A1',cert:'A',n:1,title:'A Practical Approach to Generative AI',code:'ACGAIM1',
+  delivery:'2 full days',trainers:TRAINERS_A,
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-generative-ai-ethics-and-data-protection-module-1-practical-approach',
+  runs:[{label:'24 Sep 2026',mode:'day',partial:true,dates:['2026-09-24']}]},
+
+ {id:'A2',cert:'A',n:2,title:'Prompt Engineering: Conversational AI and Design',code:'ACGAIM2',
+  delivery:'2 full days',trainers:TRAINERS_A,
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-generative-ai-ethics-and-data-protection-module-2-prompt-engineering',
+  runs:[{label:'29 Oct 2026',mode:'day',partial:true,dates:['2026-10-29']}]},
+
+ {id:'A3',cert:'A',n:3,title:'Applications of Generative AI: Business Productivity and Human Resource',code:'ACGAIM3',
+  delivery:'2 full days, or 4 evenings',trainers:TRAINERS_A,
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-generative-ai-ethics-and-data-protection-module-3-applications',
+  runs:[
+   {label:'29 Sep – 8 Oct 2026',mode:'eve',dates:['2026-09-29','2026-10-01','2026-10-06','2026-10-08']},
+   {label:'19 – 20 Oct 2026',mode:'day',dates:['2026-10-19','2026-10-20']}]},
+
+ {id:'A4',cert:'A',n:4,title:'Application of Generative AI in Digital Marketing',code:'ACGAIM4',
+  delivery:'2 full days, or 4 evenings',trainers:TRAINERS_A+', Alvin Toh',
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-generative-ai-ethics-and-data-protection-module-4-application',
+  runs:[
+   {label:'14 – 15 Sep 2026',mode:'day',dates:['2026-09-14','2026-09-15']},
+   {label:'20 – 29 Oct 2026',mode:'eve',dates:['2026-10-20','2026-10-22','2026-10-27','2026-10-29']},
+   {label:'26 – 27 Nov 2026',mode:'day',dates:['2026-11-26','2026-11-27']}]},
+
+ {id:'A5',cert:'A',n:5,title:'Application of Generative AI in Learning Management',code:'ACGAIM5',
+  delivery:'2 full days, or 4 evenings',trainers:TRAINERS_A,
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-generative-ai-ethics-and-data-protection-module-5-application',
+  runs:[{label:'19 – 20 Nov 2026',mode:'day',dates:['2026-11-19','2026-11-20']}]},
+
+ {id:'A6',cert:'A',n:6,title:'Responsible Use and Ethical Management of Generative AI',code:'ACGAIM6',
+  delivery:'2 full days',trainers:TRAINERS_A,
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-generative-ai-ethics-and-data-protection-module-6-responsible-use-and',
+  runs:[{label:'15 Oct 2026',mode:'day',partial:true,dates:['2026-10-15']}]},
+
+ {id:'B1',cert:'B',n:1,title:'Practical Approach to Large Language Models and Retrieval Augmented Generation',code:'ACGAIADM1',
+  delivery:'2 full days, or 4 evenings',trainers:TRAINERS_B,
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-gen-ai-app-design-mod-1',
+  runs:[
+   {label:'26 – 27 Oct 2026',mode:'day',dates:['2026-10-26','2026-10-27']},
+   {label:'5 – 14 Jan 2027',mode:'eve',dates:['2027-01-05','2027-01-07','2027-01-12','2027-01-14']}]},
+
+ {id:'B2',cert:'B',n:2,title:'Gen AI Apps Design and Prompt Engineering in Human Resource',code:'ACGAIADM2',
+  delivery:'2 full days, or 4 evenings',trainers:TRAINERS_B,
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-gen-ai-app-design-mod-2',
+  runs:[
+   {label:'9 – 10 Sep 2026',mode:'day',dates:['2026-09-09','2026-09-10']},
+   {label:'19 – 28 Jan 2027',mode:'eve',dates:['2027-01-19','2027-01-21','2027-01-26','2027-01-28']}]},
+
+ {id:'B3',cert:'B',n:3,title:'Gen AI Apps Design and Prompt Engineering in Learning and Development',code:'ACGAIADM3',
+  delivery:'2 full days, or 4 evenings',trainers:TRAINERS_B,
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-gen-ai-app-design-mod-3',
+  runs:[
+   {label:'21 – 22 Sep 2026',mode:'day',dates:['2026-09-21','2026-09-22']},
+   {label:'23 – 24 Nov 2026',mode:'day',dates:['2026-11-23','2026-11-24']},
+   {label:'2 – 12 Feb 2027',mode:'eve',dates:['2027-02-02','2027-02-04','2027-02-10','2027-02-12']}]},
+
+ {id:'B4',cert:'B',n:4,title:'Gen AI Apps Design and Prompt Engineering in Compliance and Legal',code:'ACGAIADM4',
+  delivery:'2 full days, or 4 evenings',trainers:TRAINERS_B,
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-gen-ai-app-design-mod-4',
+  runs:[
+   {label:'22 – 23 Oct 2026',mode:'day',dates:['2026-10-22','2026-10-23']},
+   {label:'16 – 25 Feb 2027',mode:'eve',dates:['2027-02-16','2027-02-18','2027-02-23','2027-02-25']}]},
+
+ {id:'B5',cert:'B',n:5,title:'Gen AI Apps Design and Prompt Engineering in Sales and Customer Service',code:'ACGAIADM5',
+  delivery:'2 full days, or 4 evenings',trainers:TRAINERS_B,
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-gen-ai-app-design-mod-5',
+  runs:[
+   {label:'13 – 14 Oct 2026',mode:'day',dates:['2026-10-13','2026-10-14']},
+   {label:'9 – 18 Mar 2027',mode:'eve',dates:['2027-03-09','2027-03-11','2027-03-16','2027-03-18']}]},
+
+ {id:'B6',cert:'B',n:6,title:'Gen AI Apps Design and Prompt Engineering in Marketing and Communications',code:'ACGAIADM6',
+  delivery:'2 full days, or 4 evenings',trainers:TRAINERS_B,
+  url:'https://academy.smu.edu.sg/courses/advanced-certificate-gen-ai-app-design-mod-6',
+  runs:[
+   {label:'3 – 4 Sep 2026',mode:'day',dates:['2026-09-03','2026-09-04']},
+   {label:'22 – 31 Mar 2027',mode:'eve',dates:['2027-03-22','2027-03-24','2027-03-29','2027-03-31']}]}
+];
+
+const MILESTONES = [
+  {date:'2026-09-07',label:'Ethics & Data Protection certificate cohort starts'},
+  {date:'2026-09-09',label:'Apps Design certificate cohort starts'},
+  {date:'2026-11-13',label:'Diploma applications close'},
+  {date:'2026-12-31',label:'Next diploma intake'}
+];
+
+/* ---------- build a date index ---------- */
+const byDate = {};
+function push(d,item){ (byDate[d] = byDate[d] || []).push(item); }
+MODULES.forEach(m=>m.runs.forEach(r=>r.dates.forEach(d=>push(d,{type:'mod',m,r}))));
+MILESTONES.forEach(x=>push(x.date,{type:'mile',label:x.label}));
+
+const ALL_DAYS = new Set();
+MODULES.forEach(m=>m.runs.forEach(r=>r.dates.forEach(d=>ALL_DAYS.add(d))));
+document.getElementById('t-days').textContent = ALL_DAYS.size;
+document.getElementById('t-slots').textContent =
+  MODULES.reduce((s,m)=>s+m.runs.reduce((a,r)=>a+r.dates.length,0),0);
+document.getElementById('t-runs').textContent = MODULES.reduce((s,m)=>s+m.runs.length,0);
+
+/* ---------- hoverable module codes ---------- */
+/* ================= YOUR UNAVAILABILITY — edit this block ================= */
+function dRange(a,b){
+  const out=[], [ay,am,ad]=a.split('-').map(Number), [by,bm,bd]=b.split('-').map(Number);
+  const cur=new Date(Date.UTC(ay,am-1,ad)), end=new Date(Date.UTC(by,bm-1,bd));
+  while(cur<=end){ out.push(cur.toISOString().slice(0,10)); cur.setUTCDate(cur.getUTCDate()+1); }
+  return out;
+}
+function weeklyOn(dow,from,to){ return dRange(from,to).filter(d=>{
+  const [y,m,dd]=d.split('-').map(Number);
+  return new Date(Date.UTC(y,m-1,dd)).getUTCDay()===dow;
+}); }
+
+const UNAVAILABLE = [
+  {label:'KL',    detail:'Holiday in Kuala Lumpur',    dates: dRange('2026-09-27','2026-09-30')},
+  {label:'NTU',   detail:'NTU teaching, every Friday', dates: weeklyOn(5,'2026-09-05','2026-11-13')},
+  {label:'Japan', detail:'Japan',                      dates: ['2027-01-07','2027-01-14']}
+];
+/* ======================================================================== */
+
+const BLOCK = {};
+UNAVAILABLE.forEach(b=>b.dates.forEach(d=>(BLOCK[d]=BLOCK[d]||[]).push(b)));
+const blockedOn = d => (state.block ? (BLOCK[d]||[]) : []);
+
+const MOD_BY_ID = Object.fromEntries(MODULES.map(m=>[m.id,m]));
+function codeTag(id){
+  const m = MOD_BY_ID[id];
+  if(!m) return id;
+  return `<span class="mref r${m.cert.toLowerCase()}" data-mid="${m.id}" tabindex="0"`
+       + ` aria-label="${m.cert}${m.n}: ${m.title}">${m.cert}${m.n}</span>`;
+}
+
+const tipEl = document.getElementById('tip');
+
+function placeTip(el){
+  tipEl.classList.add('on');
+  tipEl.setAttribute('aria-hidden','false');
+  const r = el.getBoundingClientRect();
+  tipEl.style.left='0px'; tipEl.style.top='0px';
+  const t = tipEl.getBoundingClientRect();
+  let x = r.left + r.width/2 - t.width/2;
+  x = Math.max(10, Math.min(x, window.innerWidth - t.width - 10));
+  let y = r.top - t.height - 8;
+  if(y < 8) y = r.bottom + 8;
+  tipEl.style.left = x+'px';
+  tipEl.style.top  = y+'px';
+}
+
+function showModTip(el){
+  const m = MOD_BY_ID[el.dataset.mid];
+  if(!m) return;
+  tipEl.innerHTML = `<b>${m.cert}${m.n} · ${m.title}</b>`
+    + `<span>${CERTS[m.cert].name} · ${m.code} · ${m.delivery}</span>`;
+  placeTip(el);
+}
+
+function showDayTip(el){
+  const key = el.dataset.d;
+  const items = (byDate[key]||[]).filter(visible);
+  const blk = blockedOn(key);
+  if(!items.length && !blk.length) return;
+  const blkRows = blk.map(b=>
+    `<div class="trow"><span class="tdot off"></span><div>`
+    + `<div class="tt">Unavailable — ${b.label}</div>`
+    + `<div class="tm">${b.detail}</div></div></div>`).join('');
+  const rows = items.map(i=>{
+    if(i.type==='mile'){
+      return `<div class="trow"><span class="tdot m"></span><div>`
+           + `<div class="tt">${i.label}</div>`
+           + `<div class="tm">Diploma milestone</div></div></div>`;
+    }
+    const c = i.m.cert.toLowerCase();
+    const hollow = i.r.mode==='eve' ? ' hollow' : '';
+    const when = i.r.mode==='eve' ? 'Evening, 6.30–10.45pm' : 'Full day';
+    return `<div class="trow"><span class="tdot ${c}${hollow}"></span><div>`
+         + `<div class="tt">${i.m.cert}${i.m.n} · ${i.m.title}</div>`
+         + `<div class="tm">${CERTS[i.m.cert].name} · ${when} · ${i.r.label}`
+         + `${i.r.partial?' · start date only':''}</div></div></div>`;
+  }).join('');
+  tipEl.innerHTML = `<b>${pretty(key)}</b>${blkRows}${rows}`;
+  placeTip(el);
+}
+
+function hideTip(){
+  tipEl.classList.remove('on');
+  tipEl.setAttribute('aria-hidden','true');
+}
+
+function hoverTarget(e){
+  if(!e.target.closest) return null;
+  const code = e.target.closest('[data-mid]');
+  if(code && MOD_BY_ID[code.dataset.mid]) return {el:code, kind:'mod'};
+  const day = e.target.closest('.day.has, .day.off');
+  if(day && day.dataset.d) return {el:day, kind:'day'};
+  const tick = e.target.closest('.tick.live, .tick.off');
+  if(tick && tick.dataset.d) return {el:tick, kind:'day'};
+  return null;
+}
+function dispatchTip(e){
+  const t = hoverTarget(e);
+  if(!t) return;
+  t.kind === 'mod' ? showModTip(t.el) : showDayTip(t.el);
+}
+
+document.addEventListener('mouseover', dispatchTip);
+document.addEventListener('mouseout',  e=>{ if(hoverTarget(e)) hideTip(); });
+document.addEventListener('focusin',   dispatchTip);
+document.addEventListener('focusout',  hideTip);
+document.addEventListener('keydown',   e=>{ if(e.key==='Escape') hideTip(); });
+window.addEventListener('scroll', hideTip, {passive:true});
+window.addEventListener('resize', hideTip);
+
+/* ---------- state ---------- */
+const state = { certs:new Set(['A','B']), mile:true, modes:new Set(['day','eve']), mine:new Set(), sel:null, block:true };
+
+const MONTHS = [[2026,8],[2026,9],[2026,10],[2026,11],[2027,0],[2027,1],[2027,2]];
+const MN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MNS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const iso = (y,m,d)=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+const pretty = s=>{const[y,m,d]=s.split('-').map(Number);const dt=new Date(y,m-1,d);
+  return `${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dt.getDay()]} ${d} ${MNS[m-1]} ${y}`;};
+
+function visible(item){
+  if(item.type==='mile') return state.mile;
+  return state.certs.has(item.m.cert) && state.modes.has(item.r.mode);
+}
+function mineDates(){
+  const map = {};
+  MODULES.filter(m=>state.mine.has(m.id)).forEach(m=>m.runs.forEach(r=>r.dates.forEach(d=>{
+    (map[d]=map[d]||new Set()).add(m.id);
+  })));
+  return map;
+}
+
+/* ---------- pathway lists ---------- */
+function renderLists(){
+  ['A','B'].forEach(c=>{
+    document.getElementById('list'+c).innerHTML = MODULES.filter(m=>m.cert===c).map(m=>{
+      const on = state.mine.has(m.id);
+      return `<li><button class="mrow" data-mid="${m.id}" aria-pressed="${on}">`
+        + `<span class="num">${m.n}</span>`
+        + `<span class="t">${m.title}</span>`
+        + `<span class="pick">${on?'✓ Teaching':'+ Add'}</span></button></li>`;
+    }).join('');
+    const tog=document.querySelector(`.certtog[data-cert="${c}"]`);
+    const shown=state.certs.has(c);
+    tog.setAttribute('aria-pressed',String(shown));
+    tog.textContent = shown ? 'Showing on calendar' : 'Hidden from calendar';
+  });
+
+  const n=state.mine.size;
+  const days=Object.keys(mineDates()).length;
+  document.getElementById('pathcount').innerHTML = n
+    ? `<b>${n}</b> module${n>1?'s':''} on your list · <b>${days}</b> class day${days>1?'s':''}`
+    : `Nothing selected yet. Click a module above to build your teaching list.`;
+  document.getElementById('jump').disabled = !n;
+}
+
+/* ---------- module pick chips ---------- */
+function renderMine(){
+  document.getElementById('mine').innerHTML = MODULES.map(m=>
+    `<button class="mchip m${m.cert.toLowerCase()}" data-mid="${m.id}" aria-pressed="${state.mine.has(m.id)}"
+      aria-label="${m.cert}${m.n}: ${m.title}">${m.cert}${m.n}</button>`).join('')
+    + `<button class="mchip" data-mid="__allA">All A</button>`
+    + `<button class="mchip" data-mid="__allB">All B</button>`
+    + `<button class="mchip" data-mid="__none">Clear</button>`;
+}
+
+/* ---------- year strip ---------- */
+function renderStrip(){
+  const COL={A:'#1F6B5E',B:'#A63D5F'};
+  const mine = mineDates();
+  const html = MONTHS.map(([y,m])=>{
+    const pad=(new Date(y,m,1).getDay()+6)%7;
+    const last=new Date(y,m+1,0).getDate();
+    let cells='';
+    for(let i=0;i<pad;i++) cells+=`<span class="tick pad"></span>`;
+    for(let d=1;d<=last;d++){
+      const k=iso(y,m,d);
+      const items=(byDate[k]||[]).filter(visible);
+      const blk=blockedOn(k);
+      if(!items.length){
+        cells += blk.length
+          ? `<span class="tick off" data-d="${k}" aria-label="${pretty(k)}: unavailable"></span>`
+          : `<span class="tick"></span>`;
+        continue;
+      }
+      const mods=items.filter(i=>i.type==='mod');
+      const mile=items.some(i=>i.type==='mile');
+      const shadows=[];
+      let col, style;
+      if(mods.length){
+        col=COL[mods[0].m.cert];
+        const eve=mods[0].r.mode==='eve';
+        style=`background:${eve?'transparent':col};`;
+        if(eve) shadows.push(`inset 0 0 0 1.5px ${col}`);
+        if(mods.length>1) shadows.push('inset 0 -3px 0 var(--clash)');
+        if(mile) shadows.push('inset 0 3px 0 var(--mile)');
+      } else {
+        style='background:var(--mile);';
+      }
+      if(shadows.length) style+=`box-shadow:${shadows.join(',')};`;
+      const isMine = !!mine[k];
+      if(blk.length) style+='outline:2px solid var(--clash);outline-offset:1px;';
+      else if(isMine) style+='outline:2px solid var(--ink);outline-offset:1px;';
+      const names=mods.map(i=>`${i.m.cert}${i.m.n}`).join(' + ');
+      const label=`${pretty(k)}${names?': '+names:''}${mile?' · diploma milestone':''}${blk.length?' · unavailable':''}`;
+      cells+=`<span class="tick live${isMine?' mine':''}" style="${style}" data-d="${k}" tabindex="0" aria-label="${label}"></span>`;
+    }
+    return `<div class="sm"><h4>${MNS[m]} ${String(y).slice(2)}</h4>`
+      + `<div class="tdow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>`
+      + `<div class="ticks">${cells}</div></div>`;
+  }).join('');
+  const strip = document.getElementById('strip');
+  strip.innerHTML = html;
+  strip.classList.toggle('focus', state.mine.size>0);
+}
+
+/* ---------- calendar ---------- */
+function renderMonths(){
+  const mine = mineDates();
+  const html = MONTHS.map(([y,m])=>{
+    const first = (new Date(y,m,1).getDay()+6)%7; // Monday-first
+    const last = new Date(y,m+1,0).getDate();
+    let cells='';
+    for(let i=0;i<first;i++) cells += `<div class="day pad"></div>`;
+    let count=0, mineCount=0;
+    for(let d=1;d<=last;d++){
+      const k = iso(y,m,d);
+      const dow = new Date(y,m,d).getDay();
+      const we = (dow===0||dow===6)?' we':'';
+      const items = (byDate[k]||[]).filter(visible);
+      const blk = blockedOn(k);
+      if(!items.length){
+        cells += blk.length
+          ? `<div class="day off${we}" data-d="${k}">${d}</div>`
+          : `<div class="day${we}">${d}</div>`;
+        continue;
+      }
+      count++;
+      const ids = mine[k];
+      let extra='';
+      if(ids && ids.size>1){ extra=' clash-day'; mineCount++; }
+      else if(ids){ extra=' mine-day'; mineCount++; }
+      if(blk.length) extra += ' off conflict';
+      const dots = items.map(i=>{
+        if(i.type==='mile') return `<span class="dot m"></span>`;
+        const c=i.m.cert.toLowerCase();
+        return i.r.mode==='eve'
+          ? `<span class="dot ev${c==='b'?' bb':''}"></span>`
+          : `<span class="dot ${c}"></span>`;
+      }).join('');
+      const selc = state.sel===k?' sel':'';
+      cells += `<button class="day has${we}${extra}${selc}" data-d="${k}">${d}<span class="dots">${dots}</span></button>`;
+    }
+    const hasMine = state.mine.size>0;
+    const cap = hasMine
+      ? `<em class="mine">${mineCount} of your ${mineCount===1?'day':'days'} · ${count} total</em>`
+      : `<em>${count} teaching ${count===1?'day':'days'}</em>`;
+    return `<div class="month${hasMine&&mineCount?' hasmine':''}"><h3>${MN[m]} ${y}${cap}</h3>
+      <div class="dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+      <div class="grid">${cells}</div></div>`;
+  }).join('');
+  const box = document.getElementById('months');
+  box.innerHTML = html;
+  box.classList.toggle('focus', state.mine.size>0);
+}
+
+/* ---------- intakes that collide with your unavailability ---------- */
+function renderConflicts(){
+  const el=document.getElementById('conflicts');
+  if(!state.block){ el.style.display='none'; return; }
+  const hits=[];
+  MODULES.forEach(m=>m.runs.forEach(r=>{
+    if(!state.certs.has(m.cert)||!state.modes.has(r.mode)) return;
+    const bad=r.dates.filter(d=>BLOCK[d]);
+    if(bad.length) hits.push({m,r,bad});
+  }));
+  if(!hits.length){
+    el.style.display='';
+    el.innerHTML='<h4>No conflicts</h4><p class="none" style="margin:0">None of the visible intakes fall on your blocked dates.</p>';
+    return;
+  }
+  el.style.display='';
+  el.innerHTML='<h4>'+hits.length+' intake'+(hits.length>1?'s':'')+' fall on days you are not available</h4>'
+    + hits.map(({m,r,bad})=>{
+      const why=bad.map(d=>`${pretty(d)} (${BLOCK[d].map(b=>b.label).join(', ')})`).join(', ');
+      const alts=m.runs.filter(o=>o!==r && !o.dates.some(d=>BLOCK[d]));
+      const altTxt = alts.length
+        ? `<span class="ok">Clear alternative:</span> ${alts.map(o=>o.label).join(' or ')}`
+        : `<span class="why">No clear alternative intake published for this module.</span>`;
+      return `<div class="cf"><div>${codeTag(m.id)} · ${m.title} — <strong>${r.label}</strong>`
+           + `${r.mode==='eve'?' (evenings)':''}</div>`
+           + `<div class="why">Blocked: ${why}</div>`
+           + `<div class="alt">${altTxt}</div></div>`;
+    }).join('');
+}
+
+/* ---------- detail ---------- */
+function renderDetail(){
+  const h=document.getElementById('detail-h'), box=document.getElementById('detail');
+  if(!state.sel){
+    h.textContent='No day selected';
+    box.querySelector('.ev')&&[...box.querySelectorAll('.ev')].forEach(n=>n.remove());
+    if(!box.querySelector('.empty')) box.insertAdjacentHTML('beforeend','<p class="empty">Pick a marked day on the calendar to see the modules running.</p>');
+    return;
+  }
+  const items=(byDate[state.sel]||[]).filter(visible);
+  h.textContent=pretty(state.sel);
+  const rows=items.map(i=>{
+    if(i.type==='mile') return `<div class="ev evm"><span class="bar"></span><div><strong>${i.label}</strong><div class="t">Diploma milestone</div></div></div>`;
+    const c=i.m.cert;
+    return `<div class="ev ${c==='B'?'evb':''}"><span class="bar"></span><div>
+      <strong>${codeTag(i.m.id)} · ${i.m.title}</strong>
+      <div class="t">${CERTS[c].name} · ${i.r.label} · ${i.r.mode==='eve'?'evening, 6.30–10.45pm':'full day'}${i.r.partial?' · start date only':''} · <a href="${i.m.url}" target="_blank" rel="noopener">${i.m.code}</a></div>
+    </div></div>`;
+  }).join('');
+  box.innerHTML = `<h4 id="detail-h">${pretty(state.sel)}</h4>` + (rows || '<p class="empty">Nothing visible under the current filters.</p>');
+}
+
+/* ---------- agenda ---------- */
+function renderAgenda(){
+  const rows=[];
+  MODULES.forEach(m=>m.runs.forEach(r=>rows.push({sort:r.dates[0],m,r})));
+  MILESTONES.forEach(x=>rows.push({sort:x.date,mile:x}));
+  rows.sort((a,b)=>a.sort.localeCompare(b.sort));
+  document.getElementById('agendaBody').innerHTML = rows.map(row=>{
+    if(row.mile){
+      const hide = state.mile?'':' hide';
+      return `<tr class="rowm${hide}"><td>${pretty(row.mile.date)}</td><td colspan="3">${row.mile.label}</td><td>—</td></tr>`;
+    }
+    const {m,r}=row;
+    const hide = (state.certs.has(m.cert)&&state.modes.has(r.mode))?'':' hide';
+    return `<tr class="row${m.cert.toLowerCase()}${hide}">
+      <td><strong>${r.label}</strong>${r.partial?' <span class="tag part">start date only</span>':''}</td>
+      <td>${codeTag(m.id)} · ${m.title}<div class="code"><a href="${m.url}" target="_blank" rel="noopener">${m.code}</a></div></td>
+      <td>${CERTS[m.cert].name}</td>
+      <td>${r.mode==='eve'?'<span class="tag eve">4 evenings, 6.30–10.45pm</span>':'<span class="tag">Full days</span>'}</td>
+      <td>${r.dates.length}</td></tr>`;
+  }).join('');
+}
+
+/* ---------- module reference ---------- */
+function renderRef(){
+  document.getElementById('refBody').innerHTML = MODULES.map(m=>`
+    <tr class="row${m.cert.toLowerCase()}">
+      <td>${codeTag(m.id)}</td>
+      <td>${m.title}</td>
+      <td><a href="${m.url}" target="_blank" rel="noopener">${m.code}</a></td>
+      <td>${m.delivery}</td>
+      <td>${m.runs.map(r=>r.label+(r.partial?' (start only)':'')).join('<br>')}</td>
+      <td>${m.trainers}</td>
+    </tr>`).join('');
+}
+
+/* ---------- readout ---------- */
+function renderReadout(){
+  const el=document.getElementById('readout');
+  if(!state.mine.size){ el.innerHTML='Select modules above to total your teaching days and check for clashes. Hover any module code for its full name.'; return; }
+  const map=mineDates();
+  const days=Object.keys(map).length;
+  const clashes=Object.entries(map).filter(([,s])=>s.size>1);
+  const partial = MODULES.filter(m=>state.mine.has(m.id) && m.runs.some(r=>r.partial));
+  let s = `<b>${state.mine.size}</b> module${state.mine.size>1?'s':''} selected · <b>${days}</b> class day${days>1?'s':''} across <b>${MODULES.filter(m=>state.mine.has(m.id)).reduce((a,m)=>a+m.runs.length,0)}</b> intakes`;
+  if(partial.length) s += ` · ${partial.length} with unpublished second day`;
+  if(clashes.length){
+    s += `<br><span class="warn">${clashes.length} clash${clashes.length>1?'es':''}:</span> ` +
+      clashes.map(([d,set])=>`${pretty(d)} (${[...set].map(codeTag).join(' + ')})`).join('; ');
+  } else {
+    s += `<br>No date clashes between the modules you picked.`;
+  }
+  const blocked=Object.keys(map).filter(d=>blockedOn(d).length);
+  if(blocked.length){
+    s += `<br><span class="warn">${blocked.length} of your day${blocked.length>1?'s':''} fall when you are away:</span> `
+      + blocked.sort().map(d=>`${pretty(d)} (${BLOCK[d].map(b=>b.label).join(', ')})`).join('; ');
+  } else if(state.block){
+    s += `<br>None of your days clash with your unavailability.`;
+  }
+  el.innerHTML=s;
+}
+
+/* ---------- wiring ---------- */
+function repaint(){ hideTip(); renderLists(); renderStrip(); renderMonths(); renderConflicts(); renderAgenda(); renderDetail(); renderReadout(); }
+
+document.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{
+  const on = b.getAttribute('aria-pressed')==='true';
+  b.setAttribute('aria-pressed', String(!on));
+  if(b.dataset.f==='A'||b.dataset.f==='B'){ on?state.certs.delete(b.dataset.f):state.certs.add(b.dataset.f); }
+  if(b.dataset.f==='M') state.mile=!on;
+  if(b.dataset.m){ on?state.modes.delete(b.dataset.m):state.modes.add(b.dataset.m); }
+  if(b.hasAttribute('data-blk')) state.block=!on;
+  repaint();
+}));
+
+document.querySelector('.path').addEventListener('click',e=>{
+  const row=e.target.closest('.mrow');
+  if(row){
+    const id=row.dataset.mid;
+    state.mine.has(id)?state.mine.delete(id):state.mine.add(id);
+    renderMine(); repaint();
+    return;
+  }
+  const tog=e.target.closest('.certtog');
+  if(tog){
+    const c=tog.dataset.cert;
+    state.certs.has(c)?state.certs.delete(c):state.certs.add(c);
+    document.querySelectorAll('.chip[data-f]').forEach(b=>{
+      if(b.dataset.f==='A'||b.dataset.f==='B') b.setAttribute('aria-pressed',String(state.certs.has(b.dataset.f)));
+    });
+    repaint();
+  }
+});
+
+document.getElementById('jump').addEventListener('click',()=>{
+  document.getElementById('months').scrollIntoView({block:'start',behavior:'smooth'});
+});
+
+document.getElementById('mine').addEventListener('click',e=>{
+  const b=e.target.closest('.mchip'); if(!b) return;
+  const id=b.dataset.mid;
+  if(id==='__none') state.mine.clear();
+  else if(id==='__allA'||id==='__allB'){
+    const cert=id.slice(-1);
+    const all=MODULES.filter(m=>m.cert===cert);
+    const on=all.every(m=>state.mine.has(m.id));
+    all.forEach(m=>on?state.mine.delete(m.id):state.mine.add(m.id));
+  }
+  else state.mine.has(id)?state.mine.delete(id):state.mine.add(id);
+  renderMine(); repaint();
+});
+
+document.getElementById('strip').addEventListener('click',e=>{
+  const t=e.target.closest('.tick.live'); if(!t) return;
+  const key=t.dataset.d;
+  state.sel=key;
+  renderMonths(); renderDetail();
+  const cell=document.querySelector(`.day.has[data-d="${key}"]`);
+  if(cell) cell.scrollIntoView({block:'center',behavior:'smooth'});
+});
+
+document.getElementById('months').addEventListener('click',e=>{
+  const d=e.target.closest('.day.has'); if(!d) return;
+  const key=d.dataset.d;
+  state.sel = state.sel===key ? null : key;
+  renderMonths(); renderDetail();
+  const again=document.querySelector(`.day.has[data-d="${key}"]`);
+  if(again) showDayTip(again);
+});
+
+document.getElementById('copyBtn').addEventListener('click',async ()=>{
+  const rows=[];
+  MODULES.forEach(m=>m.runs.forEach(r=>{
+    if(!state.certs.has(m.cert)||!state.modes.has(r.mode)) return;
+    rows.push({s:r.dates[0],t:`${r.label}\t${m.cert}${m.n} ${m.title}\t${m.code}\t${r.mode==='eve'?'4 evenings':'full days'}\t${r.dates.length} days`});
+  }));
+  rows.sort((a,b)=>a.s.localeCompare(b.s));
+  const txt='SMU IGD in Generative AI — published intakes\n\n'+rows.map(r=>r.t).join('\n');
+  const btn=document.getElementById('copyBtn');
+  try{ await navigator.clipboard.writeText(txt); btn.textContent='Copied'; }
+  catch{ btn.textContent='Copy blocked by browser'; }
+  setTimeout(()=>btn.textContent='Copy list as text',2000);
+});
+
+/* ---------- pinch point: where the schedule doubles up ---------- */
+(function(){
+  const perMonth={}, overlaps=[];
+  Object.entries(byDate).forEach(([d,items])=>{
+    const mods=items.filter(i=>i.type==='mod');
+    if(!mods.length) return;
+    const key=d.slice(0,7);
+    perMonth[key]=(perMonth[key]||0)+1;
+    if(mods.length>1) overlaps.push({d,ids:mods.map(i=>i.m.cert+i.m.n)});
+  });
+  const busiest=Object.entries(perMonth).sort((a,b)=>b[1]-a[1])[0];
+  const [by,bm]=busiest[0].split('-').map(Number);
+  const inBusiest=overlaps.filter(o=>o.d.startsWith(busiest[0]));
+  document.getElementById('pinch').innerHTML =
+    `<b>${MN[bm-1]} ${by} is the pinch point.</b> It carries ${busiest[1]} of the ${ALL_DAYS.size} teaching days, and `+
+    `${inBusiest.length} of them run two modules at once — ` +
+    inBusiest.map(o=>`${Number(o.d.slice(8))} ${MNS[bm-1]} (${o.ids.map(codeTag).join(' + ')})`).join(', ') +
+    `. If you take more than two or three modules, that month is where the conflicts land.`;
+})();
+
+renderLists(); renderMine(); renderStrip(); renderRef(); repaint();
+</script>
+</body>
+</html>
